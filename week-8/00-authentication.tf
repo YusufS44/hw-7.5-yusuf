@@ -8,6 +8,7 @@ terraform {
   }
 }
 
+#Change the project to your GCP project ID. You can find this in the GCP console.
 provider "google" {
   # Configuration options
   project = "gcp-class-417400"

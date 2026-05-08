@@ -9,16 +9,6 @@ resource "google_compute_subnetwork" "private" {
   # These CIDR ranges MUST NOT overlap
   # Do not modify unless you understand subnetting
 
-  secondary_ip_range {
-    range_name    = "k8s-pod-range"
-    ip_cidr_range = "10.24.0.0/14"
-  }
-
-  secondary_ip_range {
-    range_name    = "k8s-service-range"
-    ip_cidr_range = "10.44.0.0/20"
-  }
-
   depends_on = [
     google_compute_network.compute_network91
   ]
