@@ -13,7 +13,68 @@
 
 # Runbook
 
-- The end goal is to create a cost effective three-tier architecture that is self healing and available for more than 99%.
+The goal here is to spin up a fully configured Managed Instance Group via the GCP console — i.e. autoscaling and autohealing turned on, with instances spread across multiple zones in `us-central1`.
+
+### Prerequisites
+
+- GCP project with the Compute Engine API enabled
+- VPC and subnet in `us-central1` (or just use the default VPC)
+- Compute Admin IAM role
+
+---
+
+### Step 1 — Create a Health Check
+
+The health check has to be created before the MIG — autohealing needs something to point at, and you can't bolt one on after the fact without recreating things.
+
+**Compute Engine > Health Checks > Create**
+- Name: `week8-health-check`
+- Protocol: `HTTP` | Port: `80` | Path: `/`
+- Check interval: `10s` | Unhealthy threshold: `3`
+
+---
+
+### Step 2 — Create an Instance Template
+
+The template is what the MIG uses to stamp out identical VMs — i.e. all the VM config goes here, not on the MIG itself.
+
+**Compute Engine > Instance Templates > Create**
+- Name: `week8-template`
+- Machine type: `n2-standard-2`
+- Boot disk: CentOS Stream 10, `100 GB`
+- Network: your VPC or default
+- Network tag: `http-server`
+
+---
+
+### Step 3 — Create the Managed Instance Group
+
+This is where everything comes together — i.e. the template, the health check, autoscaling, and the multi-zone setup all get tied to the MIG here.
+
+**Compute Engine > Instance Groups > Create > New managed instance group (stateless)**
+- Name: `week8-mig`
+- Template: `week8-template`
+- Location: **Multiple zones** | Region: `us-central1` | leave the zones as default
+- Autoscaling: **On** | Signal: CPU | Target: `60%` | Min: `2` | Max: `5`
+- Autohealing: pick `week8-health-check` | Initial delay: `300s`
+
+Then hit **Create**.
+
+---
+
+### Step 4 — Verify Multi-Zone Distribution
+
+**Compute Engine > Instance Groups > week8-mig > Instances tab**
+
+Confirm the instances are spread across different zones — i.e. `us-central1-a`, `us-central1-b`, and `us-central1-c`. Multi-zone is set at creation, i.e. you can't change it after the fact.
+
+---
+
+### Critical Notes
+
+- The health check has to be created before the MIG — autohealing has nothing to configure against otherwise
+- Initial delay needs to be high enough to cover the startup script runtime — too low and the MIG will start killing instances that are still booting up
+- Honestly, multi-zone is the easiest thing to mess up here — it's locked in at creation, so if you forget to set it you're recreating the whole MIG
 
 # Terraform
 
