@@ -18,9 +18,9 @@ output "vm_internal_ip" {
   value       = google_compute_instance.vm.network_interface[0].network_ip
 }
 
-output "vm_url" {
-  value = "http://${google_compute_instance.vm.network_interface[0].access_config[0].nat_ip}"
-  description = "Public HTTP URL for the VM instance"
+output "vm_self_link" {
+  description = "VM instance self link"
+  value       = google_compute_instance.vm.self_link
 }
 
 output "vm_id" { value = google_compute_instance.vm.id }
