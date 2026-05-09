@@ -104,3 +104,39 @@ Confirm the instances are spread across different zones — i.e. `us-central1-a`
     - The name is what we call the VM.
     - The compute.id is the unique attribute assigned to the resource by the cloud provider after it is created.
     - The self_link attribute is the URI of a resource. A URI is an address that stands for Uniform Resource Identifier. It assigns the IP address to the provisioned VM.
+
+# Annotated Resources
+- 00-aunthentication.tf
+    - Terraform Registry - (registry.terraform.io/providers/hashicorp/google/latest) - In the top-right corner of the screen, there is a  
+    - Other Resources
+- 01-vpc.tf - 
+    - Terraform Registry
+        - google_project_service - (https://registry.terraform.io/providers/hashicorp/google/latest/docs/guides/google_project_service) -  I used this resource to enable compute.googleapis.com and container.googleapis.com. I set disable_on_desrtoy to false because I don't want to disable the Compute API when use submit the terraform destroy command in the terminal (git bash)
+        - google_compute_network - (https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network) - I used this for the name and teh auto_create_subnetworks. I set the auto_create_subnetworks to false so the code won't automatically create a subnet and to avoid overlapping CIDRs.
+        - google_compute_subnetwork - (https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork) - I used this resource to confirm the required arguments. Those arguments are name, ip_cidr_range, region, and network.
+    - Other Resources - I had to use each resource listed above to double check that I only included the required arguments.
+- 02-subnets.tf
+    - Terraform Registry
+        - google_compute_subnetwork - (https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork) - I used this resource to find the private_ip_google_access code. I set it to true. Even though this is listed as optional in the registry, I had to include it for this assignment because it had to show up in the outputs when I run terraform IVPA.
+    - Hashicorp Developer
+        - depends_on - (https://developer.hashicorp.com/terraform/language/meta-arguments) - I used this resource to find the code that tells terraform to complete all actions on the dependency before performing actions on teh object declaring the dependency.
+    - Other Resources - Experience setting up these resources has told me that I sometimes forget to make sure that the CIDRs can't overlap. I added a comment in the file as a reminder to check for this.
+- 03-router.tf
+    - Terraform Registry - (https://registry.terraform.io/providers/hashicorp/google/5.43.1/docs/resources/compute_router) - I used this to make sure I included the required arguments for teh router. Those arguments are name, region, and network.
+    - Other Resources - None
+- 04-nat.tf
+    - Terraform Registry 
+        - google_compute_router_nat - (https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router_nat) - I used this to find out what I need to include in this file. That includes ALL_SUBNETWORKS_ALL_IP_RANGES, ALL_SUBNETWORKS_ALL_PRIMARY_IP_RaNGES, and LIST_of_SUBNETWORKS.
+        - google_compute_address - (https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_address) - I sued this resource to get the code to get the external IP address. The 
+    - Study group discussion. This discussion helped me understand what is needed fro this file and how to format the resources as well as the file.
+    - Google Cloud Documentation - (https://docs.cloud.google.com/compute/docs/ip-addresses/configure-static-external-ip-address) - I used this guide to help me write the google_compute_address resource block so that it will show/get the external IP address.
+- 05-firewall.tf
+    - Terraform Registry - google_compute_firewall - (https://registry.terraform.io/providers/hashicorp/google/3.41.0/docs/resources/compute_firewall) - I used this resource to make sure that the GCP firewall rules attaches to the network and not just the VM.
+    - Study Group Discussion - The study group helped me understand that the firewall rules need to attach at the network level and not at the VM level.
+- 06-compute.tf
+    - Terraform Registry - google_compute_instance - (https://registry.terraform.io/providers/hashicorp/google/3.85.0/docs/resources/compute_instance) - I used this resource ti firm the required arguments. THose arguments are name, boot_disk, and machine_type. I added zone out of habit. Plus, I didn't include teh zone in the 00-authentication file. This page also shows how to load a script from a disk.
+    - Google Cloud Documentaiton - gcloud compute image list - (https://docs.cloud.google.com/sdk/gcloud/reference/compute/images/list) - I used this resource to get the command to list the compute images. From the list, I found the exact image identifier.
+- 07-outputs.tf
+    - Hashicorp Developer - Outputs Overview - (https://developer.hashicorp.com/terraform/language/values/outputs) - I used this to understand how output resources are used.
+    - Hashicorp Developer - Outputs Block - (https://developer.hashicorp.com/terraform/language/block/output) - I used this resource, along with group discussion, to help me understand how to format the outputs terraform code in this file.
+    - Attributes Reference (google_compute_instance) - (https://registry.terraform.io/providers/hashicorp/google/3.85.0/docs/resources/compute_instance#attributes-reference) - I used this resource to figure out the code for showing the internal and external IP, name, ID, and self_link outputs.
