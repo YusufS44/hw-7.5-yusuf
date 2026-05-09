@@ -107,7 +107,7 @@ Confirm the instances are spread across different zones — i.e. `us-central1-a`
 
 # Annotated Resources
 - 00-aunthentication.tf
-    - Terraform Registry - (registry.terraform.io/providers/hashicorp/google/latest) - In the top-right corner of the screen, there is a  
+    - Terraform Registry - (registry.terraform.io/providers/hashicorp/google/latest) - In the top-right corner of the screen, there is a purple button. I selected it and copied the Provider code from there and into my 00-authentication.tf file.
     - Other Resources
 - 01-vpc.tf - 
     - Terraform Registry
