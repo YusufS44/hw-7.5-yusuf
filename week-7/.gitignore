@@ -1,0 +1,21 @@
+# Terraform local state and lock files
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# Provider credentials
+# This protects against accidental credential leaks
+gcp_credentials.json
+*.json
+
+# Variables and secrets
+*.tfvars
+*.tfvars.json
+
+# Local artifacts
+favorite_food.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db

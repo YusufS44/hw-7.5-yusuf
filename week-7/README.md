@@ -1,0 +1,20 @@
+- Step 1: Create a folder for this project. Make sure it has a short name and sits close to the C drive. No spaces. Instead use underscores as separators in the folder name.
+- Step 2: Create the project files: provider.tf, main.tf, variables.tf, and README.md.
+- Step 3: Copy your json key file over to your project folder.
+- Step 4: Open provider.tf and add the provider code for google from the terraform registry. Make sure to replace the path to your json key file.
+- Step 5: In the main.tf file enter the vpc network terraform code. Use the terraform registry and Section 6 of the Terraform Udemy course to understand what the code needs to include. (NOTE: THe Terraform Udemy course goes through the click ops).
+- Step 6: Save the main.tf file.
+- Step 7: In the variables.tf file, add the variables for project_id, region, zone, favorite food, and credentials. Make sure to use the correct variable types and descriptions.
+- Step 8: Save the variables.tf file.
+- Step 9: Go back to the maint.tf file. Add the following resources. Use the terraform registry to help you.
+    - local_file - This resource creates the physical .txt file.
+    - google_compute_subnetwork - This segnents your vpc into specific ip ranges in a region to host your cloud resources.
+    - google_compute_router - This resource manages fouting for your network and lets your VPC and the internet to talk to each other.
+    - google_compute_router_nat - This resource lets the private instance which deosn't have an external IP address to securley access teh internet.
+- Step 10: Save the main.tf file.
+- Step 11: In the README.md file, add a brief description of the project and the steps you took to create it. Include any challenges you faced and how you overcame them.
+- Step 12: Open a terminal and navigate to your project folder.
+- Step 13: Run terraform init to initialize the project and download the necessary provider plugins.
+- Step 14: Run terraform validate to check the syntax and internal consistency of teh code.
+- Step 15: Run terraform plan to see the execution plan and make sure there are no errors.
+- Step 16: Run terraform apply -var="favorite_food=My homemade chili" to create the resources in your GCP project and a test file with your favorite food in it. Replace text in teh quotes with your actual favorite food.
