@@ -2,7 +2,4 @@
 resource "google_compute_router" "router_alpha" {
   name    = "router-alpha"
   network = google_compute_network.ten_network.name
-  bgp {
-    asn               = 64514
-}
 }

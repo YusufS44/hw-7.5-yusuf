@@ -51,7 +51,7 @@ resource "google_compute_backend_service" "default" {
   health_checks                   = [google_compute_health_check.http_basic_check.id]
 
   backend {
-    group           = google_compute_instance_group_manager.appserver_mig.instance_group
+    group           = google_compute_instance_group_manager.app_ten.instance_group
     balancing_mode  = "UTILIZATION"
     capacity_scaler = 1.0
   }
