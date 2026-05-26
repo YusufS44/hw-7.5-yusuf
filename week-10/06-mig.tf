@@ -16,7 +16,7 @@ resource "google_compute_instance_template" "instance_template" {
     access_config {
       network_tier = "PREMIUM"
     }
-    network = google_compute_network.vpc_network.id
+    network = google_compute_network.ten_network.id
     subnetwork = google_compute_subnetwork.network-with-private-secondary-ip-ranges.id
   }
 
@@ -25,14 +25,14 @@ resource "google_compute_instance_template" "instance_template" {
     on_host_maintenance = "MIGRATE"
   }
 
-metadata_startup_script = file("${path.module}/start.sh")
+metadata_startup_script = file("./start.sh")
 
 tags = ["web", "allow-health-check"]
 }
 
-resource "google_compute_instance_group_manager" "appserver_mig" {
-  name               = "appserver-mig"
-  base_instance_name = "app"
+resource "google_compute_instance_group_manager" "app_ten" {
+  name               = "appserver-ten"
+  base_instance_name = "app-ten"
   zone               = var.zones[0] 
   target_size        = 4
 
@@ -57,5 +57,19 @@ resource "google_compute_instance_group_manager" "appserver_mig" {
   auto_healing_policies {
     health_check      = google_compute_health_check.http_basic_check.id
     initial_delay_sec = 300
+  }
+}
+
+resource "google_compute_autoscaler" "appserver_ten" {
+  name    = "appserver-ten"
+  zone    = var.zones[0]
+  target  = google_compute_instance_group_manager.app_ten.id
+
+  autoscaling_policy {
+    max_replicas    = 10
+    min_replicas    = 4
+    cpu_utilization {
+      target = 0.6
+    }
   }
 }

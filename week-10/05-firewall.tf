@@ -2,7 +2,7 @@
 resource "google_compute_firewall" "rules" {
   project     = var.project_id
   name        = "ten-firewall-rule"
-  network     = google_compute_network.vpc_network.name
+  network     = google_compute_network.ten_network.name
   description = "Creates firewall rule targeting tagged instances"
 
   allow {
@@ -18,7 +18,7 @@ resource "google_compute_firewall" "rules" {
 #copied from Terraform registory (1st example) https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall
 resource "google_compute_firewall" "default" {
   name    = "ten-allow-health-check"
-  network = google_compute_network.vpc_network.name
+  network = google_compute_network.ten_network.name
   direction = "INGRESS"
   priority = 1000
   source_ranges = ["35.191.0.0/16", "130.211.0.0/16"]
